@@ -63,6 +63,7 @@ pub fn gen_impl_into_inner(props: &TypeProps) -> TokenStream {
             let impl_generics = &props.impl_generics;
             let where_clause = &props.where_clause;
             quote! {
+                #[allow(clippy::from_over_into)]
                 impl #impl_generics ::std::convert::Into<#ty_inner> for #ty_outer #type_generics
                 #where_clause
                 {
@@ -77,6 +78,7 @@ pub fn gen_impl_into_inner(props: &TypeProps) -> TokenStream {
             let (impl_generics, _, where_clause) = generics.split_for_impl();
             let new_lt = &new_lifetimes[0];
             quote! {
+                #[allow(clippy::from_over_into)]
                 impl #impl_generics
                     ::std::convert::Into<&#new_lt #ty_inner> for &#new_lt #ty_outer #type_generics
                 #where_clause
@@ -153,6 +155,7 @@ pub fn gen_impl_into_smartptr(target: Derive, props: &TypeProps) -> TokenStream 
     if props.has_type_params() {
         let self_as_inner = props.tokens_outer_expr_as_inner(quote!(self));
         quote! {
+            #[allow(clippy::from_over_into)]
             impl #impl_generics
                 ::std::convert::Into<#ty_target> for &#new_lt #ty_outer #type_generics
             #where_clause
